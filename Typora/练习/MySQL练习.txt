@@ -1,0 +1,27 @@
+1.	查询和 BLAKE相同部门的员工姓名和工资
+select ename, sal, deptno from emp where deptno = (select deptno from emp where ename = 'blake');
+2.	查询工资比公司平均工资高的员工的员工号，姓名和工资。
+select empno, ename, sal from emp where sal > (select avg(sal) from emp);
+3.	查询各部门中工资比本部门平均工资高的员工的员工号, 姓名和工资
+select e.empno, e.ename, e.sal from emp e, (select deptno, avg(sal) avgsal from emp group by deptno) a where e.deptno = a.deptno and e.sal > a.avgsal;
+-- 先用子查询查出各部门的平均工资作为一个新表，再与emp表配合多表查询
+4.	查询和姓名中包含字母L 的员工在相同部门的员工的员工号和姓名
+select empno, ename from emp where deptno in (select deptno from emp where ename like '%l%');
+5.	查询在部门为RESEARCH 的部门工作的员工的员工号
+select empno from emp where deptno = (select deptno from dept where dname = 'research');
+6.	查询上级领导是 KING 的员工姓名和工资
+select ename, sal from emp where mgr = (select empno from emp where ename = 'king');
+7.	查询平均工资最低的部门信息
+select d.* from dept d, (select deptno, avg(sal) from emp group by deptno order by avg(sal) limit 1) a where d.deptno = a.deptno;
+8.	查询平均工资最低的部门信息和该部门的平均工资
+select d.*, a.avgsal from dept d, (select deptno, avg(sal) avgsal from emp group by deptno order by avg(sal) limit 1) a where d.deptno = a.deptno;
+9.	查询平均工资最高的 job 信息
+select job, avg(sal) from emp group by job order by avg(sal) desc limit 1;
+10.	查询平均工资高于公司平均工资的部门
+select a.deptno from (select deptno, avg(sal) avgsal from emp group by deptno) a where a.avgsal > (select avg(sal) from emp);
+11.	查询公司中所有MANAGER的详细信息.
+select * from emp where job = 'manager';
+12.	各个部门中 最高工资中最低的那个部门的 最低工资是多少
+select e.deptno, min(e.sal) from emp e, (select deptno, max(sal) maxsal from emp group by deptno order by maxsal limit 1) a where e.deptno = a.deptno;
+13.	查询平均工资最高的部门的MANAGER的详细信息: ename, deptno, job,sal
+select e.* from emp e, (select deptno, avg(sal) avgsal from emp group by deptno order by avgsal desc limit 1) a where e.deptno = a.deptno and e.job = 'manager';

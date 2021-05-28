@@ -1,0 +1,41 @@
+1. 列出至少有1个雇员的所有部门名
+   select DISTINCT dname from emp,dept where emp.deptno = dept.deptno;
+
+2. 列出薪金比"SMITH"多的所有雇员 
+   select ename from emp where sal > (select sal from emp where ename = "SMITH");
+
+3. 列出所有“CLERK”（办事员）的姓名及其部门名称
+   SELECT ename,dname from emp,dept where emp.deptno = dept.deptno and job in ('CLERK');
+
+4. 列出各种工作类别的最低薪金，显示最低薪金大于1500的记录
+   select min(sal) from emp GROUP BY job having min(sal) > 1500;
+
+5. 列出从事“SALES”（销售）工作的雇员的姓名，假定不知道销售部的部门编号
+   select ename from emp,dept where emp.deptno = dept.deptno and dname = "SALES";
+
+6. 列出薪金高于公司平均水平的所有雇员
+   select ename from emp where sal > (select avg(sal) from emp);
+
+7. 列出与“SCOTT”从事相同工作的所有雇员 
+   select ename from emp where job = (select job from emp where ename = 'SCOTT')
+
+8. 列出某些雇员的姓名和薪金，条件是他们的薪金等于部门30中任何一个雇员的薪金
+   select ename,sal from emp where sal in (select sal from emp where deptno in ('30')); 
+
+9. 列出某些雇员的姓名和薪金，条件是他们的薪金高于部门30中所有雇员的薪金
+   SELECT ename,sal from emp where sal > (select max(sal) from emp where deptno = 30);
+
+10. 列出所有雇员的雇员名称、部门名称和薪水
+    select ename,dname,sal from emp,dept where emp.deptno = dept.deptno;
+
+11. 列出各种类别工作的最低工资
+    select min(sal) from emp GROUP BY	job;
+
+12. 列出各个部门的MANAGER（经理）的最低薪金
+    select min(sal) from emp,dept where emp.deptno = dept.deptno and job = "MANAGER"
+
+13. 列出按年薪排序的所有雇员的年薪
+    select (sal+ifnull(comm,0))*12 year_sal from emp ORDER BY year_sal;
+
+14. 列出按年薪排名的所有雇员的年薪
+    select ename,(sal+ifnull(comm,0))*12 year_sal from emp ORDER BY year_sal desc;
